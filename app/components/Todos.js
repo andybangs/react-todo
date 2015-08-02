@@ -3,7 +3,7 @@ import React from 'react';
 class Todos extends React.Component {
   render() {
     return (
-      <ul>
+      <ul style={{listStyle: 'none', padding: 0}}>
         {this.props.todos.map((todo, index) => {
           return (
             <li key={index}

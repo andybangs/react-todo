@@ -3,6 +3,7 @@ import Todos from './components/Todos';
 import TodoStore from './stores/TodoStore';
 
 const ENTER_KEY = 13;
+
 const todoStore = new TodoStore();
 const addTodo = (todo) => todoStore.addTodo(todo);
 const removeTodo = (todo) => todoStore.removeTodo(todo);
@@ -10,7 +11,7 @@ const removeTodo = (todo) => todoStore.removeTodo(todo);
 class App extends React.Component {
   render() {
     return (
-      <div className="container">
+      <div style={{textAlign: 'center'}}>
         <h1>React-Todo</h1>
         <input placeholder="Todo..." ref="newField" onKeyDown={this.handleNewTodoKeyDown.bind(this)} autoFocus></input>
         <Todos todos={this.props.todos} removeTodo={removeTodo} />
