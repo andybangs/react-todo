@@ -21,4 +21,6 @@ class TodoStore extends EventEmitter {
   }
 }
 
-export default TodoStore;
+const todoStore = new TodoStore();
+
+export default todoStore;
