@@ -1,26 +1,62 @@
+import AppDispatcher from '../dispatcher/AppDispatcher';
 import { EventEmitter } from 'events';
+import TodoConstants from '../constants/TodoConstants';
 
-class TodoStore extends EventEmitter {
+const CHANGE_EVENT = 'change';
+const _todos = {};
+
+class TODOSTORE extends EventEmitter {
   constructor() {
     super();
-    this.todos = [];
   }
 
-  addTodo(todo) {
-    this.todos.push(todo);
-    this.emit('change');
+  getAll() {
+    return _todos;
   }
 
-  removeTodo(todo) {
-    this.todos.forEach((item, index) => {
-      if (item === todo) {
-        this.todos.splice(index, 1);
-        this.emit('change');
-      }
-    });
+  emitChange() {
+    this.emit(CHANGE_EVENT);
+  }
+
+  addChangeListener(callback) {
+    this.on(CHANGE_EVENT, callback);
+  }
+
+  removeChangeListener(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
   }
 }
 
-const todoStore = new TodoStore();
+const TodoStore = new TODOSTORE();
 
-export default todoStore;
+function addTodo(todo) {
+  _todos[todo] = {
+    todo: todo,
+  };
+}
+
+function removeTodo(todo) {
+  delete _todos[todo];
+}
+
+AppDispatcher.register((action) => {
+  switch (action.actionType) {
+  case TodoConstants.TODO_ADD:
+    const todo = action.todo.trim();
+    if (todo !== '') {
+      addTodo(todo);
+      TodoStore.emitChange();
+    }
+    break;
+
+  case TodoConstants.TODO_REMOVE:
+    removeTodo(action.todo);
+    TodoStore.emitChange();
+    break;
+
+  default:
+    // no op
+  }
+});
+
+export default TodoStore;

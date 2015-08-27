@@ -1,30 +1,32 @@
 import React from 'react';
+import TodoActions from '../actions/TodoActions';
 
 class Todos extends React.Component {
   render() {
+    const todos = this.props.todos;
+    const todoItems = [];
+
+    for (const key in todos) {
+      if (todos.hasOwnProperty(key)) {
+        todoItems.push(<li key={key} ref={todos[key]} onClick={this._onRemoveTodoClick} style={{cursor: 'pointer'}}>{todos[key]}</li>);
+      }
+    }
+
     return (
       <ul style={{listStyle: 'none', padding: 0}}>
-        {this.props.todos.map((todo, index) => {
-          return (
-            <li key={index}
-              ref={todo}
-              onClick={this.handleRemoveTodoClick.bind(this)}
-              style={{cursor: 'pointer'}}>{todo}</li>
-          );
-        })}
+        {todoItems}
       </ul>
     );
   }
 
-  handleRemoveTodoClick(event) {
+  _onRemoveTodoClick(event) {
     event.preventDefault();
-    this.props.removeTodo(event.target.innerHTML);
+    TodoActions.removeTodo(event.target.innerHTML);
   }
 }
 
 Todos.propTypes = {
-  todos: React.PropTypes.array.isRequired,
-  removeTodo: React.PropTypes.func.isRequired,
+  todos: React.PropTypes.object.isRequired,
 };
 
 export default Todos;

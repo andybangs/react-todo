@@ -1,8 +1,20 @@
-import todoStore from '../stores/todoStore';
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import TodoConstants from '../constants/TodoConstants';
 
-const todoActions = {
-  addTodo: (todo) => todoStore.addTodo(todo),
-  removeTodo: (todo) => todoStore.removeTodo(todo),
+const TodoActions = {
+  addTodo: (todo) => {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_ADD,
+      todo: todo,
+    });
+  },
+
+  removeTodo: (todo) => {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_REMOVE,
+      todo: todo,
+    });
+  },
 };
 
-export default todoActions;
+export default TodoActions;
