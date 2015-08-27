@@ -5,7 +5,17 @@ import TodoConstants from '../constants/TodoConstants';
 const CHANGE_EVENT = 'change';
 const _todos = {};
 
-class TODOSTORE extends EventEmitter {
+function addTodo(todo) {
+  _todos[todo] = {
+    todo: todo,
+  };
+}
+
+function removeTodo(todo) {
+  delete _todos[todo];
+}
+
+class TodoStore extends EventEmitter {
   constructor() {
     super();
   }
@@ -27,36 +37,26 @@ class TODOSTORE extends EventEmitter {
   }
 }
 
-const TodoStore = new TODOSTORE();
+const todoStoreInstance = new TodoStore();
 
-function addTodo(todo) {
-  _todos[todo] = {
-    todo: todo,
-  };
-}
-
-function removeTodo(todo) {
-  delete _todos[todo];
-}
-
-AppDispatcher.register((action) => {
+todoStoreInstance.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
-  case TodoConstants.TODO_ADD:
-    const todo = action.todo.trim();
-    if (todo !== '') {
-      addTodo(todo);
-      TodoStore.emitChange();
-    }
-    break;
+    case TodoConstants.TODO_ADD:
+      const todo = action.todo.trim();
+      if (todo !== '') {
+        addTodo(todo);
+      }
+      break;
 
-  case TodoConstants.TODO_REMOVE:
-    removeTodo(action.todo);
-    TodoStore.emitChange();
-    break;
+    case TodoConstants.TODO_REMOVE:
+      removeTodo(action.todo);
+      break;
 
-  default:
-    // no op
+    default:
+      return;
   }
+
+  todoStoreInstance.emitChange();
 });
 
-export default TodoStore;
+export default todoStoreInstance;
