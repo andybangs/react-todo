@@ -3,15 +3,16 @@ import { EventEmitter } from 'events';
 import TodoConstants from '../constants/TodoConstants';
 
 const CHANGE_EVENT = 'change';
+
 const _todos = {};
 
-function addTodo(todo) {
+function _addTodo(todo) {
   _todos[todo] = {
     todo: todo,
   };
 }
 
-function removeTodo(todo) {
+function _removeTodo(todo) {
   delete _todos[todo];
 }
 
@@ -44,12 +45,12 @@ todoStoreInstance.dispatchToken = AppDispatcher.register((action) => {
     case TodoConstants.TODO_ADD:
       const todo = action.todo.trim();
       if (todo !== '') {
-        addTodo(todo);
+        _addTodo(todo);
       }
       break;
 
     case TodoConstants.TODO_REMOVE:
-      removeTodo(action.todo);
+      _removeTodo(action.todo);
       break;
 
     default:
